@@ -1,0 +1,36 @@
+name: continuous integration - drop-shop-interactive
+
+concurrency:
+  group: drop-shop-interactive
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["*"]
+    paths: ["apps/drop-shop-interactive-server"]
+
+jobs:
+  continuous-integration:
+    name: continuous integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: setup node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: install dependencies
+        run: npm install
+        working-directory: apps/drop-shop-interactive-server
+
+      - name: build
+        run: npm run build
+        working-directory: apps/drop-shop-interactive-server
+
+      - name: test
+        run: npm test
+        working-directory: apps/drop-shop-interactive-server
